@@ -67,8 +67,4 @@ src/
 
 ## API
 
-This project uses the [Art Institute of Chicago API](https://www.artic.edu/open-access/public-api).
-
-## License
-
-MIT
+This project uses the [Art Institute of Chicago API](https://www.artic.edu/open-access/public-api). (License MIT)
