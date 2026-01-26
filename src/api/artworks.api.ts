@@ -1,0 +1,116 @@
+import { z } from 'zod';
+import {
+  ArtworkApiResponseSchema,
+  type Artwork,
+  type ArtworkApiResponse,
+} from '../schemas';
+
+const AIC_API_BASE = 'https://api.artic.edu/api/v1';
+
+export function getImageUrl(imageId: string | null, size: number = 843): string {
+  if (!imageId) {
+    return '/placeholder-art.svg';
+  }
+  return `https://www.artic.edu/iiif/2/${imageId}/full/${size},/0/default.jpg`;
+}
+
+export async function searchArtworks(
+  query: string,
+  page: number = 1,
+  limit: number = 12
+): Promise<ArtworkApiResponse> {
+  if (!query.trim()) {
+    throw new Error('Search query cannot be empty');
+  }
+
+  const params = new URLSearchParams({
+    q: query.trim(),
+    page: String(page),
+    limit: String(limit),
+    fields: [
+      'id',
+      'title',
+      'artist_title',
+      'artist_display',
+      'date_display',
+      'medium_display',
+      'dimensions',
+      'image_id',
+      'thumbnail',
+    ].join(','),
+  });
+
+  const response = await fetch(`${AIC_API_BASE}/artworks/search?${params}`);
+
+  if (!response.ok) {
+    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const resData: unknown = await response.json();
+  const { data, error, success } = ArtworkApiResponseSchema.safeParse(resData);
+
+  if (!success) {
+    console.error('Validation error:', z.prettifyError(error));
+    throw new Error('Invalid data received from API');
+  }
+
+  return data;
+}
+
+export async function getArtworkById(id: number): Promise<Artwork> {
+  if (!Number.isInteger(id) || id < 1) {
+    throw new Error('Invalid artwork ID');
+  }
+
+  const params = new URLSearchParams({
+    fields: [
+      'id',
+      'title',
+      'artist_title',
+      'artist_display',
+      'date_display',
+      'medium_display',
+      'dimensions',
+      'image_id',
+      'thumbnail',
+    ].join(','),
+  });
+
+  const response = await fetch(`${AIC_API_BASE}/artworks/${id}?${params}`);
+
+  if (!response.ok) {
+    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const resData: unknown = await response.json();
+
+  const SingleArtworkResponseSchema = z.object({
+    data: z.object({
+      id: z.number().int(),
+      title: z.string().default('Untitled'),
+      artist_title: z.string().nullable().default(null),
+      artist_display: z.string().nullable().default(null),
+      date_display: z.string().nullable().default(null),
+      medium_display: z.string().nullable().default(null),
+      dimensions: z.string().nullable().default(null),
+      image_id: z.string().nullable().default(null),
+      thumbnail: z
+        .object({
+          alt_text: z.string().nullable().default(null),
+          width: z.number().nullable().default(null),
+          height: z.number().nullable().default(null),
+        })
+        .nullable()
+        .default(null),
+    }),
+  });
+
+  const { data, error, success } = SingleArtworkResponseSchema.safeParse(resData);
+
+  if (!success) {
+    console.error('Validation error:', z.prettifyError(error));
+    throw new Error('Invalid data received from API');
+  }
+
+  return data.data;
+}
