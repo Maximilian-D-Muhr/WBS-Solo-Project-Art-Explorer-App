@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(cd:*)",
+      "Bash(timeout 10 npm run dev:*)",
+      "Bash(cd /Users/maximilianmuhr/WBS/WBS_Git/WBS\\\\ Solo\\\\ Project\\\\ Art\\\\ Explorer\\\\ App && git status:*)",
+      "Bash(cd /Users/maximilianmuhr/WBS/WBS_Git/WBS\\\\ Solo\\\\ Project\\\\ Art\\\\ Explorer\\\\ App:*)",
+      "Bash(git add src/)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Initial Art Explorer app with React, TypeScript and Zod\n\n- Set up Vite + React + TypeScript project structure\n- Implement Artwork Zod schemas for API validation \\(FR003\\)\n- Create API fetch helper with Zod validation \\(FR004\\)\n- Build ArtworkCard component for displaying artworks \\(FR006\\)\n- Create Gallery component with localStorage persistence \\(FR007-FR011\\)\n- Implement search interface for AIC API \\(FR005\\)\n- Add MoMA-inspired minimal CSS styling\n- Full CRUD operations: Add, Read, Update notes, Delete from gallery\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: Add project README with requirements checklist\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)"
+    ]
+  }
+}
