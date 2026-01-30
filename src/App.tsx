@@ -1,16 +1,24 @@
 import { useState, useCallback } from 'react';
-import { SearchBar, SearchResults, Gallery } from './components';
+import {
+  SearchBar,
+  SearchResults,
+  Gallery,
+  AdvancedSearch,
+  ArtistBrowser,
+} from './components';
 import { useGallery } from './hooks';
-import { searchArtworks } from './api';
+import { searchArtworks, advancedSearchArtworks, type AdvancedSearchParams } from './api';
 import type { ArtworkApiResponse, Artwork } from './schemas';
 import './App.css';
 
-type View = 'search' | 'gallery';
+type View = 'search' | 'gallery' | 'advanced' | 'artists';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('search');
   const [searchResults, setSearchResults] = useState<ArtworkApiResponse | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [advancedParams, setAdvancedParams] = useState<AdvancedSearchParams | null>(null);
+  const [selectedArtist, setSelectedArtist] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,14 +51,36 @@ function App() {
     }
   }, []);
 
+  const handleAdvancedSearch = useCallback(async (params: AdvancedSearchParams, page: number = 1): Promise<void> => {
+    setIsLoading(true);
+    setError(null);
+    setAdvancedParams(params);
+
+    try {
+      const results = await advancedSearchArtworks({ ...params, page });
+      setSearchResults(results);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
+      setSearchResults(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const handlePageChange = useCallback(
     (page: number): void => {
-      if (searchQuery) {
+      if (currentView === 'advanced' && advancedParams) {
+        handleAdvancedSearch(advancedParams, page);
+      } else if (searchQuery) {
         handleSearch(searchQuery, page);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    [searchQuery, handleSearch]
+    [currentView, searchQuery, advancedParams, handleSearch, handleAdvancedSearch]
   );
 
   const handleAddToGallery = useCallback(
@@ -59,6 +89,35 @@ function App() {
     },
     [addToGallery]
   );
+
+  const handleSelectArtist = useCallback((artistName: string): void => {
+    setSelectedArtist(artistName);
+    setSearchResults(null);
+    setError(null);
+    setCurrentView('advanced');
+  }, []);
+
+  const handleViewChange = useCallback((view: View): void => {
+    if (view !== 'advanced') {
+      setSelectedArtist('');
+    }
+    setCurrentView(view);
+  }, []);
+
+  const getSearchDescription = (): string => {
+    if (currentView === 'advanced' && advancedParams) {
+      const parts: string[] = [];
+      if (advancedParams.title) parts.push(`title: "${advancedParams.title}"`);
+      if (advancedParams.artist) parts.push(`artist: "${advancedParams.artist}"`);
+      if (advancedParams.dateStart !== undefined || advancedParams.dateEnd !== undefined) {
+        const start = advancedParams.dateStart ?? 'any';
+        const end = advancedParams.dateEnd ?? 'any';
+        parts.push(`years: ${start}–${end}`);
+      }
+      return parts.join(', ');
+    }
+    return searchQuery;
+  };
 
   return (
     <div className="app">
@@ -69,14 +128,28 @@ function App() {
             <button
               type="button"
               className={`app__nav-button ${currentView === 'search' ? 'app__nav-button--active' : ''}`}
-              onClick={() => setCurrentView('search')}
+              onClick={() => handleViewChange('search')}
             >
               Search
             </button>
             <button
               type="button"
+              className={`app__nav-button ${currentView === 'advanced' ? 'app__nav-button--active' : ''}`}
+              onClick={() => handleViewChange('advanced')}
+            >
+              Advanced
+            </button>
+            <button
+              type="button"
+              className={`app__nav-button ${currentView === 'artists' ? 'app__nav-button--active' : ''}`}
+              onClick={() => handleViewChange('artists')}
+            >
+              Artists
+            </button>
+            <button
+              type="button"
               className={`app__nav-button ${currentView === 'gallery' ? 'app__nav-button--active' : ''}`}
-              onClick={() => setCurrentView('gallery')}
+              onClick={() => handleViewChange('gallery')}
             >
               My Gallery
               {gallery.length > 0 && (
@@ -88,7 +161,7 @@ function App() {
       </header>
 
       <main className="app__main">
-        {currentView === 'search' ? (
+        {currentView === 'search' && (
           <div className="app__search-view">
             <div className="app__search-header">
               <h2 className="app__section-title">Explore the Collection</h2>
@@ -108,7 +181,41 @@ function App() {
               onPageChange={handlePageChange}
             />
           </div>
-        ) : (
+        )}
+
+        {currentView === 'advanced' && (
+          <div className="app__search-view">
+            <div className="app__search-header">
+              <h2 className="app__section-title">Advanced Search</h2>
+              <p className="app__section-subtitle">
+                Filter artworks by title, artist, and time period
+              </p>
+            </div>
+            <AdvancedSearch
+              onSearch={handleAdvancedSearch}
+              isLoading={isLoading}
+              initialArtist={selectedArtist}
+            />
+            <SearchResults
+              results={searchResults}
+              isLoading={isLoading}
+              error={error}
+              searchQuery={getSearchDescription()}
+              isInGallery={isInGallery}
+              onAddToGallery={handleAddToGallery}
+              onRemoveFromGallery={removeFromGallery}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+
+        {currentView === 'artists' && (
+          <div className="app__artists-view">
+            <ArtistBrowser onSelectArtist={handleSelectArtist} />
+          </div>
+        )}
+
+        {currentView === 'gallery' && (
           <Gallery
             gallery={gallery}
             onRemoveFromGallery={removeFromGallery}
