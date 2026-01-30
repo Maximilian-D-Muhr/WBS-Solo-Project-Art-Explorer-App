@@ -2,19 +2,20 @@
 
 A React + TypeScript application for exploring the Art Institute of Chicago's collection, saving favorite artworks to a personal gallery, and adding notes.
 
-## 📊 Presentation
+## 🌐 Live Demo
 
-A project presentation is available: **[Art-Explorer-Presentation.pptx](./Art-Explorer-Presentation.pptx)**
+**[https://maximilian-d-muhr.github.io/WBS-Solo-Project-Art-Explorer-App/](https://maximilian-d-muhr.github.io/WBS-Solo-Project-Art-Explorer-App/)**
 
-The presentation covers:
-- Project Overview
-- Technology Stack
-- Code Architecture
-- All Requirements Fulfilled
+## 📊 Presentation & Demo Script
+
+- **[Art-Explorer-Presentation.pptx](./Art-Explorer-Presentation.pptx)** - Project presentation slides
+- **[LIVE-DEMO-SCRIPT.md](./LIVE-DEMO-SCRIPT.md)** - 5-minute live demo walkthrough
 
 ## Features
 
 - Search over 300,000 artworks from the Art Institute of Chicago
+- **Advanced Search** with filters for artist, title, and time period
+- **Artist Browser** with 160 curated notable artists
 - Save favorite artworks to your personal gallery (persisted in localStorage)
 - Add, edit, and delete notes on saved artworks
 - Responsive, MoMA-inspired minimal design
@@ -26,6 +27,7 @@ The presentation covers:
 - **TypeScript** with strict configuration
 - **Zod v4** for runtime data validation
 - **localStorage** for gallery persistence
+- **GitHub Pages** for deployment
 
 ## Getting Started
 
@@ -47,6 +49,8 @@ src/
 ├── api/
 │   └── artworks.api.ts    # API fetch helpers with Zod validation
 ├── components/
+│   ├── AdvancedSearch.tsx # Multi-filter search form
+│   ├── ArtistBrowser.tsx  # Alphabetical artist list
 │   ├── ArtworkCard.tsx    # Reusable artwork display component
 │   ├── Gallery.tsx        # Personal gallery view
 │   ├── SearchBar.tsx      # Search input component
