@@ -235,7 +235,7 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Presentation
+            About this Project
           </a>
         </p>
       </footer>
