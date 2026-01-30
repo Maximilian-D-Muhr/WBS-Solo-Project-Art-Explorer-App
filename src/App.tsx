@@ -229,6 +229,14 @@ function App() {
           >
             Art Institute of Chicago API
           </a>
+          {' · '}
+          <a
+            href={`${import.meta.env.BASE_URL}Art-Explorer-Presentation.pdf`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Presentation
+          </a>
         </p>
       </footer>
     </div>
