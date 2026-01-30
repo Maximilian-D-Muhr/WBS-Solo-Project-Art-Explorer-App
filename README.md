@@ -2,6 +2,16 @@
 
 A React + TypeScript application for exploring the Art Institute of Chicago's collection, saving favorite artworks to a personal gallery, and adding notes.
 
+## 📊 Presentation
+
+A project presentation is available: **[Art-Explorer-Presentation.pptx](./Art-Explorer-Presentation.pptx)**
+
+The presentation covers:
+- Project Overview
+- Technology Stack
+- Code Architecture
+- All Requirements Fulfilled
+
 ## Features
 
 - Search over 300,000 artworks from the Art Institute of Chicago
