@@ -184,13 +184,7 @@ function App() {
         )}
 
         {currentView === 'advanced' && (
-          <div className="app__search-view">
-            <div className="app__search-header">
-              <h2 className="app__section-title">Advanced Search</h2>
-              <p className="app__section-subtitle">
-                Filter artworks by title, artist, and time period
-              </p>
-            </div>
+          <div className="app__advanced-view">
             <AdvancedSearch
               onSearch={handleAdvancedSearch}
               isLoading={isLoading}

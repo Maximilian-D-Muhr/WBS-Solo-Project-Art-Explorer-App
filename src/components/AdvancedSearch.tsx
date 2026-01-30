@@ -17,7 +17,6 @@ export function AdvancedSearch({ onSearch, isLoading, initialArtist = '' }: Adva
   const [yearRange, setYearRange] = useState<[number, number]>([MIN_YEAR, MAX_YEAR]);
   const [isYearFilterActive, setIsYearFilterActive] = useState(false);
 
-  // Update artist when initialArtist prop changes
   useEffect(() => {
     if (initialArtist) {
       setArtist(initialArtist);
@@ -59,19 +58,25 @@ export function AdvancedSearch({ onSearch, isLoading, initialArtist = '' }: Adva
     setIsYearFilterActive(true);
   }, []);
 
+  const setPreset = useCallback((start: number, end: number) => {
+    setYearRange([start, end]);
+    setIsYearFilterActive(true);
+  }, []);
+
   const hasFilters = title || artist || isYearFilterActive;
 
   const formatYear = (year: number): string => {
     if (year < 0) return `${Math.abs(year)} BCE`;
-    return `${year} CE`;
+    return `${year}`;
   };
 
   return (
     <form className="advanced-search" onSubmit={handleSubmit}>
       <div className="advanced-search__grid">
+        {/* Title Field */}
         <div className="advanced-search__field">
           <label htmlFor="title" className="advanced-search__label">
-            Artwork Title
+            Title
           </label>
           <input
             type="text"
@@ -79,14 +84,15 @@ export function AdvancedSearch({ onSearch, isLoading, initialArtist = '' }: Adva
             className="advanced-search__input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Water Lilies, Starry Night"
+            placeholder="Water Lilies, Starry Night..."
             disabled={isLoading}
           />
         </div>
 
+        {/* Artist Field */}
         <div className="advanced-search__field">
           <label htmlFor="artist" className="advanced-search__label">
-            Artist Name
+            Artist
           </label>
           <input
             type="text"
@@ -94,40 +100,34 @@ export function AdvancedSearch({ onSearch, isLoading, initialArtist = '' }: Adva
             className="advanced-search__input"
             value={artist}
             onChange={(e) => setArtist(e.target.value)}
-            placeholder="e.g. Monet, Van Gogh, Picasso"
+            placeholder="Monet, Van Gogh..."
             disabled={isLoading}
           />
         </div>
 
-        <div className="advanced-search__field advanced-search__field--full">
-          <div className="advanced-search__year-header">
-            <label className="advanced-search__label">
-              Year Range
-            </label>
-            <label className="advanced-search__checkbox-label">
+        {/* Year Range - Compact */}
+        <div className="advanced-search__field advanced-search__field--year">
+          <div className="advanced-search__year-section">
+            <label className="advanced-search__year-toggle">
               <input
                 type="checkbox"
                 checked={isYearFilterActive}
                 onChange={(e) => setIsYearFilterActive(e.target.checked)}
                 disabled={isLoading}
               />
-              <span>Filter by year</span>
+              <span>Year</span>
             </label>
-          </div>
 
-          <div className={`advanced-search__year-slider ${!isYearFilterActive ? 'advanced-search__year-slider--disabled' : ''}`}>
-            <div className="advanced-search__year-display">
-              <span className="advanced-search__year-value">{formatYear(yearRange[0])}</span>
-              <span className="advanced-search__year-separator">to</span>
-              <span className="advanced-search__year-value">{formatYear(yearRange[1])}</span>
-            </div>
+            <div className={`advanced-search__year-controls ${!isYearFilterActive ? 'advanced-search__year-controls--disabled' : ''}`}>
+              <div className="advanced-search__year-display">
+                <span className="advanced-search__year-value">{formatYear(yearRange[0])}</span>
+                <span>–</span>
+                <span className="advanced-search__year-value">{formatYear(yearRange[1])}</span>
+              </div>
 
-            <div className="advanced-search__sliders">
-              <div className="advanced-search__slider-group">
-                <label htmlFor="yearMin" className="advanced-search__slider-label">From</label>
+              <div className="advanced-search__sliders">
                 <input
                   type="range"
-                  id="yearMin"
                   className="advanced-search__range"
                   min={MIN_YEAR}
                   max={MAX_YEAR}
@@ -135,12 +135,8 @@ export function AdvancedSearch({ onSearch, isLoading, initialArtist = '' }: Adva
                   onChange={(e) => handleYearMinChange(parseInt(e.target.value, 10))}
                   disabled={isLoading || !isYearFilterActive}
                 />
-              </div>
-              <div className="advanced-search__slider-group">
-                <label htmlFor="yearMax" className="advanced-search__slider-label">To</label>
                 <input
                   type="range"
-                  id="yearMax"
                   className="advanced-search__range"
                   min={MIN_YEAR}
                   max={MAX_YEAR}
@@ -149,77 +145,35 @@ export function AdvancedSearch({ onSearch, isLoading, initialArtist = '' }: Adva
                   disabled={isLoading || !isYearFilterActive}
                 />
               </div>
-            </div>
 
-            <div className="advanced-search__year-presets">
-              <button
-                type="button"
-                className="advanced-search__preset"
-                onClick={() => { setYearRange([-3000, 0]); setIsYearFilterActive(true); }}
-                disabled={isLoading}
-              >
-                Ancient
-              </button>
-              <button
-                type="button"
-                className="advanced-search__preset"
-                onClick={() => { setYearRange([1400, 1600]); setIsYearFilterActive(true); }}
-                disabled={isLoading}
-              >
-                Renaissance
-              </button>
-              <button
-                type="button"
-                className="advanced-search__preset"
-                onClick={() => { setYearRange([1800, 1900]); setIsYearFilterActive(true); }}
-                disabled={isLoading}
-              >
-                19th Century
-              </button>
-              <button
-                type="button"
-                className="advanced-search__preset"
-                onClick={() => { setYearRange([1900, 2000]); setIsYearFilterActive(true); }}
-                disabled={isLoading}
-              >
-                20th Century
-              </button>
-              <button
-                type="button"
-                className="advanced-search__preset"
-                onClick={() => { setYearRange([2000, 2025]); setIsYearFilterActive(true); }}
-                disabled={isLoading}
-              >
-                Contemporary
-              </button>
+              <div className="advanced-search__presets">
+                <button type="button" className="advanced-search__preset" onClick={() => setPreset(-3000, 0)} disabled={isLoading}>Ancient</button>
+                <button type="button" className="advanced-search__preset" onClick={() => setPreset(1400, 1600)} disabled={isLoading}>Renaiss.</button>
+                <button type="button" className="advanced-search__preset" onClick={() => setPreset(1800, 1900)} disabled={isLoading}>19th C.</button>
+                <button type="button" className="advanced-search__preset" onClick={() => setPreset(1900, 2000)} disabled={isLoading}>20th C.</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="advanced-search__actions">
-        <button
-          type="submit"
-          className="advanced-search__button advanced-search__button--primary"
-          disabled={isLoading || !hasFilters}
-        >
-          {isLoading ? 'Searching...' : 'Search'}
-        </button>
-        <button
-          type="button"
-          className="advanced-search__button advanced-search__button--secondary"
-          onClick={handleClear}
-          disabled={isLoading || !hasFilters}
-        >
-          Clear Filters
-        </button>
-      </div>
-
-      <div className="advanced-search__hints">
-        <p className="advanced-search__hint">
-          <strong>Tip:</strong> Combine filters for more precise results.
-          For example, search for "landscape" by "Monet" between 1870-1890.
-        </p>
+        {/* Actions */}
+        <div className="advanced-search__actions">
+          <button
+            type="submit"
+            className="advanced-search__button advanced-search__button--primary"
+            disabled={isLoading || !hasFilters}
+          >
+            {isLoading ? '...' : 'Search'}
+          </button>
+          <button
+            type="button"
+            className="advanced-search__button advanced-search__button--secondary"
+            onClick={handleClear}
+            disabled={isLoading || !hasFilters}
+          >
+            Clear
+          </button>
+        </div>
       </div>
     </form>
   );

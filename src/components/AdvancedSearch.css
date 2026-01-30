@@ -1,16 +1,16 @@
 .advanced-search {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
+  max-width: 100%;
+  margin: 0 auto var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
   background: var(--color-gray-50);
   border: 1px solid var(--color-gray-200);
 }
 
 .advanced-search__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
+  grid-template-columns: 1fr 1fr 2fr auto;
+  gap: var(--spacing-md);
+  align-items: end;
 }
 
 .advanced-search__field {
@@ -19,23 +19,19 @@
   gap: var(--spacing-xs);
 }
 
-.advanced-search__field--full {
-  grid-column: 1 / -1;
-}
-
 .advanced-search__label {
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-gray-700);
+  color: var(--color-gray-600);
 }
 
 .advanced-search__input {
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid var(--color-gray-300);
   background: var(--color-white);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-family: inherit;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
@@ -48,6 +44,7 @@
 
 .advanced-search__input::placeholder {
   color: var(--color-gray-400);
+  font-size: 0.8rem;
 }
 
 .advanced-search__input:disabled {
@@ -55,102 +52,80 @@
   cursor: not-allowed;
 }
 
-/* Year Range Slider Styles */
-.advanced-search__year-header {
+/* Year Range - Compact Inline */
+.advanced-search__year-section {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-sm);
 }
 
-.advanced-search__checkbox-label {
+.advanced-search__year-toggle {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   color: var(--color-gray-600);
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.advanced-search__checkbox-label input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
+.advanced-search__year-toggle input[type="checkbox"] {
+  width: 0.875rem;
+  height: 0.875rem;
   cursor: pointer;
 }
 
-.advanced-search__year-slider {
-  padding: var(--spacing-lg);
-  background: var(--color-white);
-  border: 1px solid var(--color-gray-300);
+.advanced-search__year-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+  opacity: 1;
   transition: opacity var(--transition-fast);
 }
 
-.advanced-search__year-slider--disabled {
-  opacity: 0.5;
+.advanced-search__year-controls--disabled {
+  opacity: 0.4;
   pointer-events: none;
 }
 
 .advanced-search__year-display {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-  padding: var(--spacing-md);
-  background: var(--color-gray-100);
+  gap: var(--spacing-xs);
+  font-size: 0.75rem;
+  color: var(--color-gray-700);
+  white-space: nowrap;
+  min-width: 140px;
 }
 
 .advanced-search__year-value {
-  font-size: 1.25rem;
   font-weight: var(--font-weight-semibold);
-  color: var(--color-black);
-  min-width: 100px;
-  text-align: center;
-}
-
-.advanced-search__year-separator {
-  color: var(--color-gray-500);
-  font-size: 0.875rem;
-  text-transform: uppercase;
 }
 
 .advanced-search__sliders {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-}
-
-.advanced-search__slider-group {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.advanced-search__slider-label {
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-gray-600);
-  min-width: 40px;
+  gap: 2px;
+  flex: 1;
+  min-width: 150px;
 }
 
 .advanced-search__range {
-  flex: 1;
-  height: 8px;
+  width: 100%;
+  height: 4px;
   -webkit-appearance: none;
   appearance: none;
   background: var(--color-gray-200);
-  border-radius: 4px;
+  border-radius: 2px;
   cursor: pointer;
 }
 
 .advanced-search__range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   background: var(--color-black);
   border-radius: 50%;
   cursor: grab;
@@ -161,52 +136,36 @@
   transform: scale(1.1);
 }
 
-.advanced-search__range::-webkit-slider-thumb:active {
-  cursor: grabbing;
-  transform: scale(1.2);
-}
-
 .advanced-search__range::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   background: var(--color-black);
   border: none;
   border-radius: 50%;
   cursor: grab;
 }
 
-.advanced-search__range:disabled {
-  cursor: not-allowed;
-}
-
 .advanced-search__range:disabled::-webkit-slider-thumb {
   background: var(--color-gray-400);
-  cursor: not-allowed;
 }
 
-.advanced-search__range:disabled::-moz-range-thumb {
-  background: var(--color-gray-400);
-  cursor: not-allowed;
-}
-
-.advanced-search__year-presets {
+.advanced-search__presets {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-  justify-content: center;
+  gap: 4px;
 }
 
 .advanced-search__preset {
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-size: 0.75rem;
+  padding: 2px 6px;
+  font-size: 0.6rem;
   font-weight: var(--font-weight-medium);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   border: 1px solid var(--color-gray-300);
   background: var(--color-white);
-  color: var(--color-gray-700);
+  color: var(--color-gray-600);
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .advanced-search__preset:hover:not(:disabled) {
@@ -219,22 +178,22 @@
   cursor: not-allowed;
 }
 
+/* Actions - Inline */
 .advanced-search__actions {
   display: flex;
-  gap: var(--spacing-md);
-  justify-content: center;
-  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-sm);
 }
 
 .advanced-search__button {
-  padding: var(--spacing-md) var(--spacing-2xl);
-  font-size: 0.875rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 0.75rem;
   font-weight: var(--font-weight-medium);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .advanced-search__button--primary {
@@ -254,12 +213,12 @@
 .advanced-search__button--secondary {
   background: transparent;
   border-color: var(--color-gray-300);
-  color: var(--color-gray-700);
+  color: var(--color-gray-600);
+  padding: var(--spacing-sm) var(--spacing-md);
 }
 
 .advanced-search__button--secondary:hover:not(:disabled) {
   background: var(--color-gray-100);
-  border-color: var(--color-gray-400);
 }
 
 .advanced-search__button--secondary:disabled {
@@ -267,51 +226,49 @@
   cursor: not-allowed;
 }
 
+/* Hide hints to save space */
 .advanced-search__hints {
-  text-align: center;
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--color-gray-200);
+  display: none;
 }
 
-.advanced-search__hint {
-  font-size: 0.875rem;
-  color: var(--color-gray-500);
-  margin: 0;
+@media (max-width: 1024px) {
+  .advanced-search__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .advanced-search__field--year {
+    grid-column: 1 / -1;
+  }
+
+  .advanced-search__actions {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  .advanced-search__presets {
+    display: none;
+  }
 }
 
-.advanced-search__hint strong {
-  color: var(--color-gray-700);
-}
-
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .advanced-search {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
   }
 
   .advanced-search__grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+  }
+
+  .advanced-search__year-section {
+    flex-wrap: wrap;
   }
 
   .advanced-search__actions {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .advanced-search__button {
-    width: 100%;
-  }
-
-  .advanced-search__year-display {
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
-
-  .advanced-search__year-presets {
-    gap: var(--spacing-xs);
-  }
-
-  .advanced-search__preset {
-    font-size: 0.65rem;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    flex: 1;
   }
 }
